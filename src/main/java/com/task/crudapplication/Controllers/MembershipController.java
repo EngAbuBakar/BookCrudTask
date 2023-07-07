@@ -23,9 +23,21 @@ public class MembershipController {
        List<Membership> membershipList=(List<Membership>) this.membershipService.getAllMemberships();
        return membershipList;
     }
-    @GetMapping (value = "getMembershipById/{id}")
+    @GetMapping (value = "/getMembershipById/{id}")
     private Membership getUser(@PathVariable("id") Long id){
         return membershipService.getMembershipById(id);
     }
 
+    @PutMapping("/updateMembershipById/{id}")
+    public Membership updateMembership(@RequestBody Membership membership,@PathVariable Long id){
+        membership.setId(id);
+        this.membershipService.updatedMembership(membership,id);
+        return membership;
+    }
+
+    @DeleteMapping("deleteMembershipById/{id}")
+    public String deleteMembership(@PathVariable ("id") Long id){
+         this.membershipService.deleteMembership(id);
+        return "deleted successfully";
+    }
 }

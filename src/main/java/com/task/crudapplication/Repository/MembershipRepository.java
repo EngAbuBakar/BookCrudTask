@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface MembershipRepository extends JpaRepository<Membership,Long> {
     public Optional<Membership> findById(Long id );
+    Membership findMembershipBytierName(String tierName);
 }

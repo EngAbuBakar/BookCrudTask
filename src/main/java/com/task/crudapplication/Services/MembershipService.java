@@ -11,10 +11,14 @@ import java.util.List;
 public class MembershipService {
     @Autowired
     MembershipRepository membershipRepository;
-    public Membership addMembership(Membership membership)
+    public String addMembership(Membership membership)
     {
-        this.membershipRepository.save(membership);
-        return membership;
+       // if (membershipRepository.findMembershipBytierName(membership.getTierName())==null) {
+            this.membershipRepository.save(membership);
+            return "Membership added successfully";
+//        } else {
+//            return "Already exist";
+//        }
     }
 
     public List<Membership> getAllMemberships() {
@@ -23,5 +27,16 @@ public class MembershipService {
 
     public Membership getMembershipById(Long id){
         return  this.membershipRepository.findById(id).get();
+    }
+
+
+    public Membership updatedMembership(Membership membership, Long id) {
+        this.membershipRepository.save(membership);
+        return membership;
+    }
+
+    public String deleteMembership(Long id) {
+        this.membershipRepository.deleteById(id);
+        return "Membership deleted:";
     }
 }

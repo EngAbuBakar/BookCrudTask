@@ -11,6 +11,9 @@ public class Book {
     private Long id;
     private String title;
     private String tier;
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
 
