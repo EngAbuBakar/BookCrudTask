@@ -1,18 +1,12 @@
 package com.task.crudapplication.Services;
 
-import com.fasterxml.jackson.annotation.OptBoolean;
 import com.task.crudapplication.DTOs.BookDto;
 import com.task.crudapplication.Entity.Book;
 import com.task.crudapplication.Entity.User;
-import com.task.crudapplication.Exceptions.UserNotFound;
 import com.task.crudapplication.Repository.BookRepository;
-import com.task.crudapplication.Repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,7 +19,7 @@ public class BookService {
     ModelMapper modelMapper;
 
     public Book addBook(BookDto bookDto) {
-        Book book = Book.build(bookDto.getId(), bookDto.getTitle(), bookDto.getTier(), bookDto.getUserId());
+        Book book = Book.build(bookDto.getId(), bookDto.getTitle(), bookDto.getTier(),(List<User>) bookDto.getUserDto());
         this.bookRepository.save(book);
         return book;
     }
@@ -49,7 +43,7 @@ public class BookService {
     }
 
     public void updateBook(BookDto bookDto, Long id) {
-        Book book = Book.build(bookDto.getId(), bookDto.getTitle(), bookDto.getTier(), bookDto.getUserId());
+        Book book = Book.build(bookDto.getId(), bookDto.getTitle(), bookDto.getTier(), (List<User>) bookDto.getUserDto());
         this.bookRepository.findById(id);
         try {
             this.bookRepository.save(book);
@@ -66,6 +60,10 @@ public class BookService {
         }
         this.bookRepository.deleteById(id);
         return "Book deleted";
+    }
+
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     public Book dtoToBook(BookDto bookDto) {

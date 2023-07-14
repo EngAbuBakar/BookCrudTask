@@ -59,6 +59,11 @@ public class UserController {
         userService.updateUser(userDto, id);
         return users;
     }
+    @PutMapping("/{userId}/books/{bookId}")
+    public User assignBookToUser(@PathVariable("userId") Long uid,@PathVariable("bookId") Long bid){
+        return userService.assignBookToUser(uid,bid);
+
+    }
 
     @DeleteMapping("/{userId}")
   //  @PreAuthorize("hasAuthority('ROLE_ADMIN')")

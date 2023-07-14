@@ -1,12 +1,15 @@
 package com.task.crudapplication.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor(staticName = "build")
 @NoArgsConstructor
 public class User {
@@ -17,6 +20,10 @@ public class User {
     private String email;
     @Column(name = "membership_id")
     private Long membershipId;
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinTable(name = "user_book",
+    joinColumns = @JoinColumn(name = "user_id"))
+    private List<Book> assignedBooks=new ArrayList<>();
 
 
 }

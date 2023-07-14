@@ -1,8 +1,10 @@
 package com.task.crudapplication.Services;
 
 import com.task.crudapplication.DTOs.UserDto;
+import com.task.crudapplication.Entity.Book;
 import com.task.crudapplication.Entity.User;
 import com.task.crudapplication.Exceptions.UserNotFound;
+import com.task.crudapplication.Repository.BookRepository;
 import com.task.crudapplication.Repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,12 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    BookRepository bookRepository;
+    @Autowired
     ModelMapper modelMapper;
 
     public User addUser(UserDto userDto) {
-        User user = User.build(userDto.getId(), userDto.getName(), userDto.getEmail(), userDto.getMembershipId());
+        User user = User.build(userDto.getId(), userDto.getName(), userDto.getEmail(), userDto.getMembershipId(), (List<Book>) userDto.getBookDto());
         this.userRepository.save(user);
         return user;
     }
@@ -45,7 +49,7 @@ public class UserService {
     }
 
     public void updateUser(UserDto userDto, Long id) {
-        User user = User.build(userDto.getId(), userDto.getName(), userDto.getEmail(), userDto.getMembershipId() );
+        User user = User.build(userDto.getId(), userDto.getName(), userDto.getEmail(), userDto.getMembershipId(),(List<Book>) userDto.getBookDto() );
         this.userRepository.findById(id);
         try {
             this.userRepository.save(user);
@@ -70,4 +74,18 @@ public class UserService {
         return userDto;
     }
 
+    public User assignBookToUser(Long uid, Long bid) {
+        List<Book> bookList=null;
+        User user=userRepository.findById(uid).get();
+        Book book=bookRepository.findById(bid).get();
+       bookList= user.getAssignedBooks();
+       bookList.add(book);
+       user.setAssignedBooks(bookList);
+      return userRepository.save(user);
+
+    }
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 }
