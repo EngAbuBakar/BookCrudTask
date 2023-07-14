@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+    private Long id;
     @NotNull
     private String name;
     @Email(message = "invalid email address")
     private String email;
-    private Membership membership;
+    private Long membershipId;
 }

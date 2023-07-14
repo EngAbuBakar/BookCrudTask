@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDto {
+    private Long id;
     @NotNull(message = "title should not be null")
     private String title;
     private String tier;
-    private User user;
+    private Long userId;
 }

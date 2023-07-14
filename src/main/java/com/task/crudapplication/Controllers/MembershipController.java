@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,45 +22,57 @@ import java.util.Optional;
 public class MembershipController {
     @Autowired
     MembershipService membershipService;
-    @PostMapping()
-    public ResponseEntity<Membership> addMemberShip(@RequestBody @Valid MembershipDto membershipDto)
-    {
-       return new ResponseEntity<>(this.membershipService.addMembership(membershipDto), HttpStatus.CREATED);
 
-    }
-    @GetMapping("/")
-    public ResponseEntity<List<MembershipDto>> getAllMemberships(MembershipDto membershipDto){
-       List<MembershipDto>memberships=membershipService.getAllMemberships();
-       if (memberships.size()<=0){
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    @PostMapping("/")
+    public ResponseEntity<Membership> addMembership(@RequestBody @Valid MembershipDto membershipDto) {
+       List<MembershipDto>membershipDtoList=this.membershipService.getAllMemberships();
+       if (membershipDtoList.size()<=0){
+           return new ResponseEntity<>(this.membershipService.addMembership(membershipDto), HttpStatus.CREATED);
        }
-       return ResponseEntity.of(Optional.of(memberships));
+       else {
+
+           return new ResponseEntity<>(HttpStatus.FOUND);
+       }
     }
-    @GetMapping (value = "/{membershipId}")
-    private ResponseEntity <Membership> getUser(@PathVariable("membershipId") Long id) throws MembershipNotFound{
-        Membership memberships=membershipService.getMembershipById(id);
-        if (memberships==null){
+
+    @GetMapping("/")
+    public ResponseEntity<List<MembershipDto>> getAllMemberships(MembershipDto membershipDto) {
+        List<MembershipDto> memberships = membershipService.getAllMemberships();
+        if (memberships.size() <= 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }else
-            throw new MembershipNotFound("Membership not found with the id:"+id);
-
-        //return ResponseEntity.of(Optional.of(memberships));
+        }
+        return ResponseEntity.of(Optional.of(memberships));
     }
 
-    @PutMapping("/{membershipId}")
-    public Membership updateMembership(@RequestBody Membership membership,@PathVariable Long id){
-        membership.setId(id);
-        this.membershipService.updatedMembership(membership,id);
-        return membership;
+    @GetMapping(value = "/{membershipId}")
+    public ResponseEntity<Membership> getMembership(@PathVariable("membershipId") Long id) throws MembershipNotFound {
+        Membership membership = membershipService.getMembershipById(id);
+        if (membership == null) {
+            // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new MembershipNotFound("Membership not found with the id:" + id);
+        }
+        return ResponseEntity.of(Optional.of(membership));
+    }
+
+    @PutMapping(value = "/{membershipId}")
+    public Membership updateMembership(@RequestBody MembershipDto membershipDto, @PathVariable("membershipId") Long id) throws MembershipNotFound {
+        Membership memberships = membershipService.getMembershipById(id);
+        if (memberships == null) {
+            throw new MembershipNotFound("Membership not found with the id:" + id);
+        }
+        membershipDto.setId(id);
+        this.membershipService.updatedMembership(membershipDto, id);
+        return memberships;
     }
 
     @DeleteMapping("/{membershipId}")
-    public String deleteMembership(@PathVariable ("membershipId") Long id) throws MembershipNotFound {
-        Membership membership=membershipService.getMembershipById(id);
-        if (membership==null){
-            return "Membership not found";
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String deleteMembership(@PathVariable("membershipId") Long id) throws MembershipNotFound {
+        Membership membership = membershipService.getMembershipById(id);
+        if (membership == null) {
+            throw new MembershipNotFound("Membership not found with the id:" + id);
         } else
-         this.membershipService.deleteMembership(id);
+            this.membershipService.deleteMembership(id);
         return "deleted successfully";
     }
 }

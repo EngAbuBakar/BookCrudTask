@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MembershipDto {
+    private Long id;
     @NotNull(message = "tierName should not be null")
     private String tierName;
 }

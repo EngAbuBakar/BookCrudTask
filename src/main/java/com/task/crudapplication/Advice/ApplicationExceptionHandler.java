@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
@@ -24,21 +25,24 @@ public class ApplicationExceptionHandler {
 
         return errMap;
     }
-@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UserNotFound.class)
     public Map<String, String> handleBusinessException(UserNotFound ex) {
         Map<String, String> errMap = new HashMap<>();
         errMap.put("Error message", ex.getMessage());
         return errMap;
     }
-@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(MembershipNotFound.class)
     public Map<String, String> handleBusinessException(MembershipNotFound ex) {
         Map<String, String> errMap = new HashMap<>();
         errMap.put("Error message", ex.getMessage());
         return errMap;
     }
-@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(BookNotFound.class)
     public Map<String, String> handleBusinessException(BookNotFound ex) {
         Map<String, String> errMap = new HashMap<>();

@@ -20,7 +20,7 @@ public class UserService {
     ModelMapper modelMapper;
 
     public User addUser(UserDto userDto) {
-        User user = User.build(0L, userDto.getName(), userDto.getEmail(), userDto.getMembership());
+        User user = User.build(userDto.getId(), userDto.getName(), userDto.getEmail(), userDto.getMembershipId());
         this.userRepository.save(user);
         return user;
     }
@@ -44,13 +44,17 @@ public class UserService {
         return user;
     }
 
-    public String updateuser(User user, Long id) {
-        this.userRepository.save(user);
-        return "User updated successfully";
-
+    public void updateUser(UserDto userDto, Long id) {
+        User user = User.build(userDto.getId(), userDto.getName(), userDto.getEmail(), userDto.getMembershipId() );
+        this.userRepository.findById(id);
+        try {
+            this.userRepository.save(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public String deleteuser(Long id) {
+    public String deleteUser(Long id) {
         this.userRepository.deleteById(id);
         return "user deleted";
     }
