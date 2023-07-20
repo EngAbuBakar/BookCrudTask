@@ -15,4 +15,5 @@ public class Membership {
     @Column(unique = true)
     private String tierName;
 
+
 }

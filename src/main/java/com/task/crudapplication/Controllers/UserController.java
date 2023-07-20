@@ -32,10 +32,14 @@ public class UserController {
     @GetMapping("/")
     public ResponseEntity<List<UserDto>> getAllUsers(UserDto userDto) {
         List<UserDto> userList = (List<UserDto>) this.userService.getAllUsers();
-        if (userList.size() <= 0) {
+        if (isEmpty(userList)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else
-            return ResponseEntity.of(Optional.of(userList));
+            return new ResponseEntity<>(HttpStatus.FOUND);
+    }
+
+    private boolean isEmpty(List list){
+        return list == null || list.isEmpty();
     }
 
     @GetMapping("/{userId}")
