@@ -9,7 +9,6 @@ import com.task.crudapplication.Services.MembershipService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +24,9 @@ public class MembershipController {
 
     @PostMapping("/")
     public ResponseEntity<Membership> addMembership(@RequestBody @Valid MembershipDto membershipDto) {
-       List<MembershipDto>membershipDtoList=this.membershipService.getAllMemberships();
-       if (membershipDtoList.size()<=0){
-           return new ResponseEntity<>(this.membershipService.addMembership(membershipDto), HttpStatus.CREATED);
+       List<MembershipDto>membershipDtoList=membershipService.getAllMemberships();
+       if (isEmpty(membershipDtoList)){
+           return new ResponseEntity<>(membershipService.addMembership(membershipDto), HttpStatus.CREATED);
        }
        else {
 
@@ -35,10 +34,14 @@ public class MembershipController {
        }
     }
 
+    private boolean isEmpty(List list){
+        return list == null || list.isEmpty();
+    }
+
     @GetMapping("/")
     public ResponseEntity<List<MembershipDto>> getAllMemberships(MembershipDto membershipDto) {
         List<MembershipDto> memberships = membershipService.getAllMemberships();
-        if (memberships.size() <= 0) {
+        if (memberships.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.of(Optional.of(memberships));
@@ -51,7 +54,7 @@ public class MembershipController {
             // return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             throw new MembershipNotFound("Membership not found with the id:" + id);
         }
-        return ResponseEntity.of(Optional.of(membership));
+        return new ResponseEntity<>(membership,HttpStatus.FOUND);
     }
 
     @PutMapping(value = "/{membershipId}")

@@ -2,12 +2,11 @@ package com.task.crudapplication.DTOs;
 
 import com.task.crudapplication.Entity.User;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDto {
@@ -15,5 +14,5 @@ public class BookDto {
     @NotNull(message = "title should not be null")
     private String title;
     private String tier;
-    private Long userId;
+    private UserDto userDto;
 }

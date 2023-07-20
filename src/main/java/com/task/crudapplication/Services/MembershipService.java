@@ -69,6 +69,9 @@ public class MembershipService {
 
     }
 
+    public MembershipService(MembershipRepository membershipRepository) {
+        this.membershipRepository = membershipRepository;
+    }
 
     public Membership dtoToMembership(MembershipDto membershipDto) {
         Membership membership = this.modelMapper.map(membershipDto, Membership.class);

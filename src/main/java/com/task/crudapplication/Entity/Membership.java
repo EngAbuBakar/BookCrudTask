@@ -1,12 +1,11 @@
 package com.task.crudapplication.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor(staticName = "build")
 @NoArgsConstructor
 public class Membership {
@@ -15,5 +14,6 @@ public class Membership {
     private Long id;
     @Column(unique = true)
     private String tierName;
+
 
 }

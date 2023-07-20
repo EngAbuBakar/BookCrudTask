@@ -27,18 +27,22 @@ public class BookController {
     @PostMapping("/")
     public ResponseEntity<Book> addBook(@RequestBody @Valid BookDto bookDto) {
 
-        return new ResponseEntity<>(this.bookService.addBook(bookDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(bookService.addBook(bookDto), HttpStatus.CREATED);
 
     }
 
     @GetMapping("/")
     //  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<BookDto>> getAllBooks(BookDto bookDto) {
-        List<BookDto> bookList = (List<BookDto>) this.bookService.getAllBooks();
-        if (bookList.size() <= 0) {
+        List<BookDto> bookList = (List<BookDto>) bookService.getAllBooks();
+        if (isEmpty(bookList)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.of(Optional.of(bookList));
+        return new ResponseEntity<>(HttpStatus.FOUND);
+    }
+
+    private boolean isEmpty(List list){
+        return list == null || list.isEmpty();
     }
 
     @GetMapping(value = "/{bookId}")
